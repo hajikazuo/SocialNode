@@ -1,0 +1,17 @@
+﻿[
+  {
+    "outputFileName": "wwwroot/bundler/js/socialnode.all.min.js",
+    "inputFiles": [
+      "wwwroot/js/demo.js",
+      "wwwroot/js/tabler.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/bundler/css/socialnode.all.min.css",
+    "inputFiles": [
+      "wwwroot/css/demo.css",
+      "wwwroot/css/tabler.css",
+      "wwwroot/icons/tabler-icons.css"
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+﻿@model List<UserViewModel>
+
+<h2>All Users</h2>
+
+<ul>
+    @foreach (var user in Model)
+    {
+        <li>
+            @user.FullName
+            <a asp-action="Add" asp-route-id="@user.Id" class="btn btn-sm btn-primary ms-2">Add Friend</a>
+            <a asp-action="Friends" asp-route-id="@user.Id" class="btn btn-sm btn-secondary ms-2">View friends list</a>
+        </li>
+    }
+</ul>

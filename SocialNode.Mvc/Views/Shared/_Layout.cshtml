@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SocialNode</title>
+
+    @await Html.PartialAsync("_StylesheetsPartial")
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+</head>
+<body data-bs-theme="dark">
+    <div class="page">
+        @{
+            await Html.RenderPartialAsync("_Menu");
+            await Html.RenderPartialAsync("_Navbar");
+        }
+        <div class="page-wrapper">
+            <div class="page-body">
+                @RenderBody()
+            </div>
+
+            @{
+                await Html.RenderPartialAsync("_Footer");
+            }
+        </div>
+    </div>
+
+    @{
+        await Html.RenderPartialAsync("_Scripts");
+    }
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

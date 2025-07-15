@@ -1,0 +1,68 @@
+services:
+  socialnode.mvc:
+    image: ${DOCKER_REGISTRY-}socialnodemvc
+    build:
+      context: .
+      target: 'final'
+      dockerfile: SocialNode.Mvc/Dockerfile
+    depends_on:
+      - socialnode.db
+    networks:
+      socialnode.network:
+      socialnode.internal:
+        ipv4_address: "172.20.18.3"
+
+  socialnode.db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: socialnode.db
+    ports:
+      - "1433:1433"
+    restart: always
+    expose:
+      - "1433"
+    environment:
+      SA_PASSWORD: "Test@2025"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - socialnode-data:/var/opt/mssql
+    networks:
+      socialnode.network:
+      socialnode.internal:
+        ipv4_address: "172.20.18.10"
+
+  neo4j:
+    container_name: neo4j
+    image: neo4j:5.20-community
+    restart: always
+    ports:
+      - "7474:7474"   # Console Web (http)
+      - "7687:7687"   # Bolt (protocolo usado pelo C#)
+    environment:
+      - NEO4J_AUTH=neo4j/Test@2025!
+      - NEO4J_dbms_memory_heap_initial__size=2G
+      - NEO4J_dbms_memory_heap_max__size=4G
+      - NEO4J_dbms_memory_pagecache_size=1G
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+      - TZ=America/Sao_Paulo 
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+    networks:
+      socialnode.network:
+      socialnode.internal:
+        ipv4_address: "172.20.18.30"
+
+networks:
+  socialnode.internal:
+    internal: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.18.0/24
+  socialnode.network:
+
+volumes:
+  socialnode-data:
+  neo4j-data:
+  neo4j-logs:

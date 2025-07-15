@@ -1,0 +1,26 @@
+@using System.Security.Claims
+@{
+    var userName = User.Identity?.Name ?? "";
+    var roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+    var principalRole = roles.Contains("Admin") ? "Admin" : roles.FirstOrDefault() ?? "";
+    var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "";
+}
+@if (User.Identity.IsAuthenticated)
+{
+    <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+        <div class="avatar avatar-sm rounded-circle bg-primary text-white text-center fw-bold d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+            @userName.Substring(0, Math.Min(2, userName.Length)).ToUpper()
+        </div>
+        <div class="d-none d-xl-block ps-2">
+            <div>@userName</div>
+            <div class="mt-1 small text-secondary">@principalRole</div>
+        </div>
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+        <form asp-controller="Auth" asp-action="Logout" method="post" class="dropdown-item m-0 p-0">
+            <button type="submit" class="dropdown-item w-100 text-start">Logout</button>
+        </form>
+    </div>
+
+}

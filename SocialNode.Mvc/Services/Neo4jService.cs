@@ -69,6 +69,35 @@ namespace SocialNode.Mvc.Services
             }
         }
 
+        public async Task RemoveFriendshipAsync(Guid userId1, Guid userId2)
+        {
+            var query = @"
+                MATCH (a:User {id: $id1})-[r1:FRIEND_OF]->(b:User {id: $id2})
+                DELETE r1
+                WITH a, b
+                MATCH (b)-[r2:FRIEND_OF]->(a)
+                DELETE r2";
+
+            var parameters = new
+            {
+                id1 = userId1.ToString(),
+                id2 = userId2.ToString()
+            };
+
+            await using var session = _driver.AsyncSession(o => o.WithDatabase(_database));
+            try
+            {
+                await session.ExecuteWriteAsync(async tx =>
+                {
+                    await tx.RunAsync(query, parameters);
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error removing friendship in Neo4j", ex);
+            }
+        }
+
         public async Task<List<Guid>> GetFriendsAsync(Guid userId)
         {
             var query = @"

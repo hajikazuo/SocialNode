@@ -18,18 +18,23 @@ namespace SocialNode.Mvc.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> Search([FromQuery] string query)
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-            var allUsers = await _userManager.Users
-                .Where(u => u.Id != currentUser.Id)
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return View(new List<UserViewModel>());
+            }
+
+            var users = await _userManager.Users
+                .Where(u => u.CompleteName.Contains(query))
                 .Select(u => new UserViewModel
                 {
                     Id = u.Id,
-                    FullName = u.CompleteName,
-                }).ToListAsync();
+                    FullName = u.CompleteName
+                })
+                .ToListAsync();
 
-            return View(allUsers);
+            return View(users);
         }
 
         public async Task<IActionResult> Suggestions()
@@ -48,7 +53,7 @@ namespace SocialNode.Mvc.Controllers
             return View(users);
         }
 
-        public async Task<IActionResult> Friends(Guid id)
+        public async Task<IActionResult> FriendList(Guid id)
         {
             var friendIds = await _neo4jService.GetFriendsAsync(id);
 
@@ -99,5 +104,13 @@ namespace SocialNode.Mvc.Controllers
             await _neo4jService.CreateFriendshipAsync(currentUser.Id, id);
             return RedirectToAction("Suggestions");
         }
+
+        public async Task<IActionResult> Remove(Guid id)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            await _neo4jService.RemoveFriendshipAsync(currentUser.Id, id);
+            return RedirectToAction("MyFriends");
+        }
+
     }
 }

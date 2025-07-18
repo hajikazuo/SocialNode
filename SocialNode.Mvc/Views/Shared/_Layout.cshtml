@@ -8,8 +8,9 @@
     @await Html.PartialAsync("_StylesheetsPartial")
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/tabler-theme.js"></script>
 </head>
-<body data-bs-theme="dark">
+<body>
     <div class="page">
         @{
             await Html.RenderPartialAsync("_Menu");
@@ -17,6 +18,21 @@
         }
         <div class="page-wrapper">
             <div class="page-body">
+                <div class="container-xl">
+                    <form id="searchForm" class="input-group input-group-flat" asp-action="Search" asp-controller="Friends" method="get">
+                        <input name="query" type="text" class="form-control" autocomplete="off" placeholder="Buscar amigos" />
+                        <span class="input-group-text">
+                            <a href="#" class="link-secondary" onclick="document.getElementById('searchForm').submit(); return false;">
+                                <i class="ti ti-search"></i>
+                            </a>
+                        </span>
+                    </form>
+
+                    @{
+                        await Html.RenderPartialAsync("_Title");
+                    }
+                </div>
+
                 @RenderBody()
             </div>
 

@@ -1,5 +1,11 @@
 ﻿@model List<UserViewModel>
 
+@{
+    var pageName = "Resultados da busca";
+    ViewData["Title"] = pageName;
+}
+
+
 <div class="container-xl">
     <div class="row g-4">
         <div class="col">
@@ -26,7 +32,14 @@
                                         <div class="row">
                                             <div class="col d-flex justify-content-end">
                                                 <div class="mt-3 badges">
-                                                    <a asp-action="Add" asp-route-id="@user.Id" class="badge badge-outline text-secondary fw-normal badge-pill"><i class="ti ti-plus"></i> Add</a>
+                                                    @if (user.IsFriend)
+                                                    {
+                                                        <a asp-action="Remove" asp-route-id="@user.Id" class="badge badge-outline text-danger fw-normal badge-pill"><i class="ti ti-x"></i> Remover</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a asp-action="Add" asp-route-id="@user.Id" class="badge badge-outline text-secondary fw-normal badge-pill"><i class="ti ti-plus"></i> Adicionar</a>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>

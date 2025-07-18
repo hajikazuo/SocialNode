@@ -27,14 +27,19 @@ namespace SocialNode.Mvc.Controllers
 
             var users = await _userManager.Users
                 .Where(u => u.CompleteName.Contains(query))
-                .Select(u => new UserViewModel
-                {
-                    Id = u.Id,
-                    FullName = u.CompleteName
-                })
                 .ToListAsync();
 
-            return View(users);
+            var currentUser = await _userManager.GetUserAsync(User);
+            var friendIds = await _neo4jService.GetFriendsAsync(currentUser.Id);
+
+            var model = users.Select(u => new UserViewModel
+            {
+                Id = u.Id,
+                FullName = u.CompleteName,
+                IsFriend = friendIds.Contains(u.Id)
+            }).ToList();
+
+            return View(model);
         }
 
         public async Task<IActionResult> Suggestions()

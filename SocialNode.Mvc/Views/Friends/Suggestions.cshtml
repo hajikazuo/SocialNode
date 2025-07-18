@@ -1,5 +1,10 @@
 ﻿@model List<UserViewModel>
 
+@{
+    var pageName = "Sugestões de amizade";
+    ViewData["Title"] = pageName;
+}
+
 <div class="container-xl">
     <div class="row row-cards">
         @foreach (var user in Model)

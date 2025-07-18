@@ -1,0 +1,21 @@
+{
+  "chaves": [
+    {
+      "tagMenu": "Home",
+      "rotas": "Home_Index",
+      "controller": false
+    },
+    {
+      "tagMenu": "Friends_MyFriends",
+      "rotas": "Friends_MyFriends",
+      "controller": false
+    },
+    {
+      "tagMenu": "Friends_Suggestions",
+      "rotas": "Friends_Suggestions",
+      "controller": false
+    }
+  ]
+}
+
+

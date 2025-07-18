@@ -17,10 +17,5 @@ namespace SocialNode.Mvc.Controllers
         {
             return View();
         }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
     }
 }

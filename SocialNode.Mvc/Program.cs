@@ -4,12 +4,20 @@ using SocialNode.Mvc.Context;
 using SocialNode.Mvc.Models;
 using SocialNode.Mvc.Services;
 using SocialNode.Mvc.Settings;
+using SocialNode.Mvc.TagHelpers;
 using System;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
+var menuJsonPath = Path.Combine(Directory.GetCurrentDirectory(), "navMenu.json");
+var json = File.ReadAllText(menuJsonPath);
+
+var menuConfig = JsonSerializer.Deserialize<JsonMenu>(json);
+builder.Services.AddSingleton(menuConfig);
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<SocialNodeContext>(options =>

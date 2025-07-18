@@ -1,18 +1,8 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    var pageName = "Home Page";
+    ViewData["Title"] = pageName;
 }
 
 <div class="container-xl">
-    <div class="col col-md-auto">
-
-        <form id="searchForm" class="input-group input-group-flat" asp-action="Search" asp-controller="Friends" method="get">
-            <input name="query" type="text" class="form-control" autocomplete="off" placeholder="Buscar amigos" />
-            <span class="input-group-text">
-                <a href="#" class="link-secondary" onclick="document.getElementById('searchForm').submit(); return false;">
-                    <i class="ti ti-search"></i>
-                </a>
-            </span>
-        </form>
-
-    </div>
+    
 </div>

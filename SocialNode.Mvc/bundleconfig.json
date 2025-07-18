@@ -11,7 +11,8 @@
     "inputFiles": [
       "wwwroot/css/demo.css",
       "wwwroot/css/tabler.css",
-      "wwwroot/icons/tabler-icons.css"
+      "wwwroot/icons/tabler-icons.css",
+      "wwwroot/css/tabler-themes.css"
     ]
   }
 ]

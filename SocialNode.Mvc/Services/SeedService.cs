@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SocialNode.Mvc.Context;
 using SocialNode.Mvc.Models;
 using System;
@@ -26,42 +27,48 @@ namespace SocialNode.Mvc.Services
 
         private async Task CreateUsers()
         {
-            string[] names = {
-                "Alice Johnson", "Bob Smith", "Charlie Brown", "Diana Prince", "Eve Adams",
-                "Frank Castle", "Grace Hopper", "Hank Pym", "Ivy Williams", "Jack Reacher"
-            };
+            var exists = await _context.Users.AnyAsync();
 
-            foreach (var name in names)
+            if (exists != true)
             {
-                string email = name.Replace(" ", ".").ToLower() + "@gmail.com";
-                var user = await _userManager.FindByEmailAsync(email);
-                if (user == null)
+                string[] names = 
                 {
-                    user = new User
-                    {
-                        UserName = email,
-                        Email = email,
-                        CompleteName = name
-                    };
+                    "Alice Johnson", "Bob Smith", "Charlie Brown", "Diana Prince", "Eve Adams",
+                    "Frank Castle", "Grace Hopper", "Hank Pym", "Ivy Williams", "Jack Reacher"
+                };
 
-                    var result = await _userManager.CreateAsync(user, "Test@123");
-                    if (result.Succeeded)
+                foreach (var name in names)
+                {
+                    string email = name.Replace(" ", ".").ToLower() + "@gmail.com";
+                    var user = await _userManager.FindByEmailAsync(email);
+                    if (user == null)
                     {
-                        await _neo4jService.CreateUserAsync(user.Id, user.CompleteName);
+                        user = new User
+                        {
+                            UserName = email,
+                            Email = email,
+                            CompleteName = name
+                        };
+
+                        var result = await _userManager.CreateAsync(user, "Test@123");
+                        if (result.Succeeded)
+                        {
+                            await _neo4jService.CreateUserAsync(user.Id, user.CompleteName);
+                        }
                     }
                 }
-            }
 
-            var allUsers = _userManager.Users.ToList();
-            var rand = new Random();
+                var allUsers = _userManager.Users.ToList();
+                var rand = new Random();
 
-            for (int i = 0; i < allUsers.Count; i++)
-            {
-                for (int j = i + 1; j < allUsers.Count; j++)
+                for (int i = 0; i < allUsers.Count; i++)
                 {
-                    if (rand.NextDouble() < 0.3)
+                    for (int j = i + 1; j < allUsers.Count; j++)
                     {
-                        await _neo4jService.CreateFriendshipAsync(allUsers[i].Id, allUsers[j].Id);
+                        if (rand.NextDouble() < 0.3)
+                        {
+                            await _neo4jService.CreateFriendshipAsync(allUsers[i].Id, allUsers[j].Id);
+                        }
                     }
                 }
             }
